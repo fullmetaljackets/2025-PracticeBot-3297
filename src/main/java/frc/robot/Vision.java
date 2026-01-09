@@ -24,7 +24,7 @@
 
  package frc.robot;
 
- import frc.robot.generated.TunerConstants.Vision;
+ import frc.robot.generated.TunerConstants;
  
  import edu.wpi.first.math.Matrix;
  import edu.wpi.first.math.VecBuilder;
@@ -60,18 +60,18 @@
       */
      public Vision(EstimateConsumer estConsumer) {
          this.estConsumer = estConsumer;
-         camera = new PhotonCamera(kCameraName);
+         camera = new PhotonCamera(TunerConstants.kCameraName);
  
          photonEstimator =
-                 new PhotonPoseEstimator(kTagLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, kRobotToCam);
+                 new PhotonPoseEstimator(TunerConstants.kTagLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, TunerConstants.kRobotToCam);
          photonEstimator.setMultiTagFallbackStrategy(PoseStrategy.LOWEST_AMBIGUITY);
  
-         // ----- Simulation
+        //  ----- Simulation
          if (Robot.isSimulation()) {
              // Create the vision system simulation which handles cameras and targets on the field.
              visionSim = new VisionSystemSim("main");
              // Add all the AprilTags inside the tag layout as visible targets to this simulated field.
-             visionSim.addAprilTags(kTagLayout);
+             visionSim.addAprilTags(TunerConstants.kTagLayout);
              // Create simulated camera properties. These can be set to mimic your actual camera.
              var cameraProp = new SimCameraProperties();
              cameraProp.setCalibration(960, 720, Rotation2d.fromDegrees(90));
@@ -83,7 +83,7 @@
              // targets.
              cameraSim = new PhotonCameraSim(camera, cameraProp);
              // Add the simulated camera to view the targets on this simulated field.
-             visionSim.addCamera(cameraSim, kRobotToCam);
+             visionSim.addCamera(cameraSim, TunerConstants.kRobotToCam);
  
              cameraSim.enableDrawWireframe(true);
          }
@@ -127,11 +127,11 @@
              Optional<EstimatedRobotPose> estimatedPose, List<PhotonTrackedTarget> targets) {
          if (estimatedPose.isEmpty()) {
              // No pose input. Default to single-tag std devs
-             curStdDevs = kSingleTagStdDevs;
+             curStdDevs = TunerConstants.kSingleTagStdDevs;
  
          } else {
              // Pose present. Start running Heuristic
-             var estStdDevs = kSingleTagStdDevs;
+             var estStdDevs = TunerConstants.kSingleTagStdDevs;
              int numTags = 0;
              double avgDist = 0;
  
@@ -150,12 +150,12 @@
  
              if (numTags == 0) {
                  // No tags visible. Default to single-tag std devs
-                 curStdDevs = kSingleTagStdDevs;
+                 curStdDevs = TunerConstants.kSingleTagStdDevs;
              } else {
                  // One or more tags visible, run the full heuristic.
                  avgDist /= numTags;
                  // Decrease std devs if multiple targets are visible
-                 if (numTags > 1) estStdDevs = kMultiTagStdDevs;
+                 if (numTags > 1) estStdDevs = TunerConstants.kMultiTagStdDevs;
                  // Increase std devs based on (average) distance
                  if (numTags == 1 && avgDist > 4)
                      estStdDevs = VecBuilder.fill(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
