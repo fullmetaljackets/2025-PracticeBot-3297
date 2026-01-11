@@ -45,14 +45,15 @@ import edu.wpi.first.math.Matrix;
  import org.photonvision.targeting.PhotonTrackedTarget;
  
  public class Vision {
-     private final PhotonCamera camera;
+     
+     private PhotonCamera camera;
      private final PhotonPoseEstimator photonEstimator;
      private Matrix<N3, N1> curStdDevs;
      private final EstimateConsumer estConsumer;
  
      // Simulation
-     private PhotonCameraSim cameraSim;
-     private VisionSystemSim visionSim;
+    //  private PhotonCameraSim cameraSim;
+    //  private VisionSystemSim visionSim;
 
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
 
@@ -98,23 +99,24 @@ import edu.wpi.first.math.Matrix;
              visionEst = photonEstimator.update(change);
              updateEstimationStdDevs(visionEst, change.getTargets());
  
-             if (Robot.isSimulation()) {
-                 visionEst.ifPresentOrElse(
-                         est ->
-                                 getSimDebugField()
-                                         .getObject("VisionEstimation")
-                                         .setPose(est.estimatedPose.toPose2d()),
-                         () -> {
-                             getSimDebugField().getObject("VisionEstimation").setPoses();
-                         });
-             }
+            //  if (Robot.isSimulation()) {
+            //      visionEst.ifPresentOrElse(
+            //              est ->
+            //                      getSimDebugField()
+            //                              .getObject("VisionEstimation")
+            //                              .setPose(est.estimatedPose.toPose2d()),
+            //              () -> {
+            //                  getSimDebugField().getObject("VisionEstimation").setPoses();
+            //              });
+            //  }
  
              visionEst.ifPresent(
                      est -> {
                          // Change our trust in the measurement based on the tags we can see
                          var estStdDevs = getEstimationStdDevs();
  
-                         estConsumer.accept(est.estimatedPose.toPose2d(), est.timestampSeconds, estStdDevs);
+                        //  estConsumer.accept(est.estimatedPose.toPose2d(), est.timestampSeconds, estStdDevs);
+                         drivetrain.addVisionMeasurement(est.estimatedPose.toPose2d(), est.timestampSeconds, estStdDevs);
                      });
          }
          
@@ -181,20 +183,20 @@ import edu.wpi.first.math.Matrix;
  
      // ----- Simulation
  
-     public void simulationPeriodic(Pose2d robotSimPose) {
-         visionSim.update(robotSimPose);
-     }
+    //  public void simulationPeriodic(Pose2d robotSimPose) {
+    //      visionSim.update(robotSimPose);
+    //  }
  
      /** Reset pose history of the robot in the vision system simulation. */
-     public void resetSimPose(Pose2d pose) {
-         if (Robot.isSimulation()) visionSim.resetRobotPose(pose);
-     }
+    //  public void resetSimPose(Pose2d pose) {
+    //      if (Robot.isSimulation()) visionSim.resetRobotPose(pose);
+    //  }
  
-     /** A Field2d for visualizing our robot and objects on the field. */
-     public Field2d getSimDebugField() {
-         if (!Robot.isSimulation()) return null;
-         return visionSim.getDebugField();
-     }
+    //  /** A Field2d for visualizing our robot and objects on the field. */
+    //  public Field2d getSimDebugField() {
+    //      if (!Robot.isSimulation()) return null;
+    //      return visionSim.getDebugField();
+    //  }
  
      @FunctionalInterface
      public static interface EstimateConsumer {
