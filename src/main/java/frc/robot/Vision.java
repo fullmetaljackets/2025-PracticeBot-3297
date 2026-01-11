@@ -55,15 +55,16 @@ import edu.wpi.first.math.Matrix;
     //  private PhotonCameraSim cameraSim;
     //  private VisionSystemSim visionSim;
 
-    public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
+    public final CommandSwerveDrivetrain drivetrain;
 
  
      /**
       * @param estConsumer Lamba that will accept a pose estimate and pass it to your desired {@link
       *     edu.wpi.first.math.estimator.SwerveDrivePoseEstimator}
       */
-     public Vision(EstimateConsumer estConsumer) {
+     public Vision(EstimateConsumer estConsumer, CommandSwerveDrivetrain drivetrain) {
          this.estConsumer = estConsumer;
+         this.drivetrain = drivetrain;
          camera = new PhotonCamera(TunerConstants.kCameraName);
  
          photonEstimator =
