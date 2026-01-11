@@ -25,8 +25,8 @@
  package frc.robot;
 
  import frc.robot.generated.TunerConstants;
- 
- import edu.wpi.first.math.Matrix;
+import frc.robot.subsystems.CommandSwerveDrivetrain;
+import edu.wpi.first.math.Matrix;
  import edu.wpi.first.math.VecBuilder;
  import edu.wpi.first.math.geometry.Pose2d;
  import edu.wpi.first.math.geometry.Rotation2d;
@@ -53,6 +53,9 @@
      // Simulation
      private PhotonCameraSim cameraSim;
      private VisionSystemSim visionSim;
+
+    public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
+
  
      /**
       * @param estConsumer Lamba that will accept a pose estimate and pass it to your desired {@link
@@ -67,26 +70,26 @@
          photonEstimator.setMultiTagFallbackStrategy(PoseStrategy.LOWEST_AMBIGUITY);
  
         //  ----- Simulation
-         if (Robot.isSimulation()) {
-             // Create the vision system simulation which handles cameras and targets on the field.
-             visionSim = new VisionSystemSim("main");
-             // Add all the AprilTags inside the tag layout as visible targets to this simulated field.
-             visionSim.addAprilTags(TunerConstants.kTagLayout);
-             // Create simulated camera properties. These can be set to mimic your actual camera.
-             var cameraProp = new SimCameraProperties();
-             cameraProp.setCalibration(960, 720, Rotation2d.fromDegrees(90));
-             cameraProp.setCalibError(0.35, 0.10);
-             cameraProp.setFPS(15);
-             cameraProp.setAvgLatencyMs(50);
-             cameraProp.setLatencyStdDevMs(15);
-             // Create a PhotonCameraSim which will update the linked PhotonCamera's values with visible
-             // targets.
-             cameraSim = new PhotonCameraSim(camera, cameraProp);
-             // Add the simulated camera to view the targets on this simulated field.
-             visionSim.addCamera(cameraSim, TunerConstants.kRobotToCam);
+        //  if (Robot.isSimulation()) {
+        //      // Create the vision system simulation which handles cameras and targets on the field.
+        //      visionSim = new VisionSystemSim("main");
+        //      // Add all the AprilTags inside the tag layout as visible targets to this simulated field.
+        //      visionSim.addAprilTags(TunerConstants.kTagLayout);
+        //      // Create simulated camera properties. These can be set to mimic your actual camera.
+        //      var cameraProp = new SimCameraProperties();
+        //      cameraProp.setCalibration(960, 720, Rotation2d.fromDegrees(90));
+        //      cameraProp.setCalibError(0.35, 0.10);
+        //      cameraProp.setFPS(15);
+        //      cameraProp.setAvgLatencyMs(50);
+        //      cameraProp.setLatencyStdDevMs(15);
+        //      // Create a PhotonCameraSim which will update the linked PhotonCamera's values with visible
+        //      // targets.
+        //      cameraSim = new PhotonCameraSim(camera, cameraProp);
+        //      // Add the simulated camera to view the targets on this simulated field.
+        //      visionSim.addCamera(cameraSim, TunerConstants.kRobotToCam);
  
-             cameraSim.enableDrawWireframe(true);
-         }
+        //      cameraSim.enableDrawWireframe(true);
+         //}
      }
  
      public void periodic() {
@@ -114,6 +117,7 @@
                          estConsumer.accept(est.estimatedPose.toPose2d(), est.timestampSeconds, estStdDevs);
                      });
          }
+         
      }
  
      /**
