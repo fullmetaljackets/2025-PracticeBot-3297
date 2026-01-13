@@ -37,6 +37,11 @@ public class TunerConstants {
 
     public static final String kCameraName = "Arducam_OV9281_(Front_Cam)";
 
+    //photon vision variables used for distance calculation
+    public static double FrontCamMountAngle = 0; //degrees
+    public static double FrontCamHight = 29; // 
+    public static final double HubTagHight = 12.25; //not correct 
+
     // Both sets of gains need to be tuned to your individual robot.
 
     // The steer motor uses any SwerveModule.SteerRequestType control request with the

@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import frc.robot.commands.AimAtTarget;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
+import frc.robot.subsystems.Vision_sub;
 
 public class RobotContainer {
     private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
@@ -38,6 +39,7 @@ public class RobotContainer {
     private final CommandXboxController CopilotStick = new CommandXboxController(1);
 
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
+    public final Vision_sub vision_sub = new Vision_sub();
  
          //      cameraSim = camera.getSim();
          //      cameraSim.setProperties(cameraProp);
@@ -71,7 +73,7 @@ public class RobotContainer {
         DriveStick.a().whileTrue(drivetrain.applyRequest(() -> brake));
         // reset the field-centric heading when b is pressed
         DriveStick.b().onTrue((drivetrain.runOnce(() -> drivetrain.seedFieldCentric())));
-        DriveStick.rightBumper().whileTrue(new AimAtTarget(drivetrain));
+        DriveStick.rightBumper().whileTrue(new AimAtTarget(drivetrain, vision_sub));
 
         drivetrain.registerTelemetry(logger::telemeterize);
     }
