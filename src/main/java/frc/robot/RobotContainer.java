@@ -18,8 +18,10 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import frc.robot.commands.AimAtTarget;
+import frc.robot.commands.ShooterRun;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
+import frc.robot.subsystems.TestShooterMotor;
 import frc.robot.subsystems.Vision_sub;
 
 public class RobotContainer {
@@ -39,6 +41,7 @@ public class RobotContainer {
     private final CommandXboxController CopilotStick = new CommandXboxController(1);
 
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
+    public final TestShooterMotor s_TestShooterMotor = new TestShooterMotor();
     public final Vision_sub vision_sub = new Vision_sub();
  
          //      cameraSim = camera.getSim();
@@ -74,6 +77,8 @@ public class RobotContainer {
         // reset the field-centric heading when b is pressed
         DriveStick.b().onTrue((drivetrain.runOnce(() -> drivetrain.seedFieldCentric())));
         DriveStick.rightBumper().whileTrue(new AimAtTarget(drivetrain, vision_sub));
+
+        DriveStick.rightTrigger().whileTrue(new ShooterRun(0.2, s_TestShooterMotor));
 
         drivetrain.registerTelemetry(logger::telemeterize);
     }
